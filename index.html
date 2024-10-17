@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>無限に「w」を表示する</title>
+    <style>
+        body {
+            font-size: 20px;
+            white-space: pre-wrap; /* 自動で改行する */
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // 無限に「w」を追加し続ける関数
+        function addW() {
+            document.body.innerText += 'w';
+            requestAnimationFrame(addW); // 次のフレームで再度実行
+        }
+
+        // ページが読み込まれたら「w」を追加し始める
+        window.onload = function() {
+            addW();
+        };
+    </script>
+</body>
+</html>
