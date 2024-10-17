@@ -3,25 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>無限に「w」を表示する</title>
+    <title>カラフルな3D回転「w」を流す</title>
     <style>
-        body {
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* 画面のスクロールを防ぐ */
+            height: 100%;
+            background: linear-gradient(90deg, #ff9a9e 0%, #fad0c4 100%);
+            position: relative;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .w-container {
+            position: absolute;
+            width: 100%;
+            white-space: pre-wrap; /* 自動で改行 */
+            top: 0;
+            color: white;
             font-size: 20px;
-            white-space: pre-wrap; /* 自動で改行する */
+            line-height: 1.5; /* 行間を少し広げる */
+            transform: translateZ(0); /* 3D効果を適用するためのベース */
+        }
+
+        @keyframes flowDown {
+            0% {
+                top: -100%;
+                transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+            }
+            100% {
+                top: 100%;
+                transform: rotateX(720deg) rotateY(360deg) rotateZ(180deg); /* 3D回転 */
+            }
+        }
+
+        .w-container {
+            animation: flowDown 20s linear infinite; /* 無限に流れるアニメーション */
+        }
+
+        @keyframes fadeBg {
+            0% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.3; }
+        }
+
+        .background-dust {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.5) 1%, rgba(255,255,255,0) 30%);
+            pointer-events: none; /* 背景がクリックできないように */
+            animation: fadeBg 5s ease-in-out infinite; /* フェードアニメーション */
+        }
+
+        /* カラフルな「w」効果 */
+        @keyframes colorShift {
+            0% { color: red; }
+            25% { color: yellow; }
+            50% { color: green; }
+            75% { color: blue; }
+            100% { color: purple; }
+        }
+
+        .w {
+            display: inline-block;
+            animation: colorShift 2s infinite; /* 文字の色をカラフルに変える */
         }
     </style>
 </head>
 <body>
+    <div class="background-dust"></div> <!-- 背景の塵 -->
+    <div class="w-container" id="w-container"></div>
+
     <script>
-        // 無限に「w」を追加し続ける関数
+        const container = document.getElementById('w-container');
+        let wCount = 0;
+        let wText = '';
+
         function addW() {
-            document.body.innerText += 'w';
-            requestAnimationFrame(addW); // 次のフレームで再度実行
+            wText += '<span class="w">w</span>';
+            wCount++;
+
+            // 100文字ごとに改行を追加
+            if (wCount % 100 === 0) {
+                wText += '<br>';
+            }
+
+            container.innerHTML = wText;
         }
 
-        // ページが読み込まれたら「w」を追加し始める
-        window.onload = function() {
+        // 無限に「w」を追加するループ
+        function loop() {
             addW();
+            requestAnimationFrame(loop); // 無限ループ
+        }
+
+        window.onload = function() {
+            loop(); // ページが読み込まれたら実行開始
         };
     </script>
 </body>
